@@ -1,5 +1,6 @@
 package com.example.simpleproject.controller;
 
+import com.example.simpleproject.model.AuthorDto;
 import com.example.simpleproject.model.BookDto;
 import com.example.simpleproject.service.BookService;
 import io.swagger.annotations.Api;
@@ -7,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/book")
@@ -21,8 +24,22 @@ public class BookController {
         return bookService.findBook(id);
     }
 
+    @GetMapping("/name/{name}")
+    public BookDto findBookByName(@PathVariable String name){
+        return bookService.findBookByName(name);
+    }
+
+    @GetMapping("/code/{code}")
+    public BookDto findBookByCode(@PathVariable String code){
+        return bookService.findBookByCode(code);
+    }
+    @GetMapping("/filter")
+    public BookDto findBookByFilter(@PathVariable String code){
+        return bookService.findBookByCode(code);
+    }
+
     @PostMapping("/save")
-    public ResponseEntity<HttpStatus> saveBook(@RequestBody BookDto bookDto ){
+    public ResponseEntity<HttpStatus> saveBook(@RequestBody BookDto bookDto){
         return bookService.createBook(bookDto) ?
                 new ResponseEntity<>(HttpStatus.CREATED):
                 new ResponseEntity<>(HttpStatus.BAD_REQUEST);
