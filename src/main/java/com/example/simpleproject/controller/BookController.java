@@ -1,6 +1,5 @@
 package com.example.simpleproject.controller;
 
-import com.example.simpleproject.model.AuthorDto;
 import com.example.simpleproject.model.BookDto;
 import com.example.simpleproject.service.BookService;
 import io.swagger.annotations.Api;
@@ -33,9 +32,9 @@ public class BookController {
     public BookDto findBookByCode(@PathVariable String code){
         return bookService.findBookByCode(code);
     }
-    @GetMapping("/filter")
-    public BookDto findBookByFilter(@PathVariable String code){
-        return bookService.findBookByCode(code);
+    @GetMapping("/author/{author}")
+    public List<BookDto> findBookByAuthor(@PathVariable String author){
+        return bookService.findBookByAuthor(author);
     }
 
     @PostMapping("/save")

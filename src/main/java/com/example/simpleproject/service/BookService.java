@@ -1,15 +1,16 @@
 package com.example.simpleproject.service;
 
-import com.example.simpleproject.entity.Author;
-import com.example.simpleproject.entity.BookEntity;
-import com.example.simpleproject.model.BookDto;
-import com.example.simpleproject.repository.AuthorRepo;
-import com.example.simpleproject.repository.BookRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import com.example.simpleproject.entity.Author;
+import com.example.simpleproject.model.BookDto;
+import com.example.simpleproject.entity.BookEntity;
+import com.example.simpleproject.repository.AuthorRepo;
+import com.example.simpleproject.repository.BookRepo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -34,8 +35,13 @@ public class BookService {
     }
 
     public BookDto findBook(Long id) {
-        BookDto bookDto;
-        bookDto = bookRepo.findById(id).map(BookDto::valueOf).orElseThrow();
+        BookDto bookDto = null;
+        try {
+            bookDto = bookRepo.findById(id).map(BookDto::valueOf).orElseThrow();
+        }catch (NoSuchElementException exception){
+            exception.printStackTrace();
+            return bookDto;
+        }
         return bookDto;
     }
 
@@ -71,6 +77,21 @@ public class BookService {
     }
 
     public BookDto findBookByCode(String code){
-        return BookDto.valueOf(bookRepo.findByISNBcode(code));
+        BookDto bookDto = null;
+        try {
+            bookDto = BookDto.valueOf(bookRepo.findByISNBcode(code));
+        }catch (NullPointerException ex){
+            ex.printStackTrace();
+            return bookDto;
+        }
+        return bookDto;
+    }
+    public List<BookDto> findBookByAuthor(String author){
+        List<BookDto> bookDtos = new ArrayList<>();
+        List<BookEntity> bookEntities = bookRepo.findAllByAuthors(author).stream().toList();
+        for (BookEntity bookEntity : bookEntities) {
+            bookDtos.add(BookDto.valueOf(bookEntity));
+        }
+        return bookDtos;
     }
 }

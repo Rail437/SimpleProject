@@ -5,6 +5,7 @@ import com.example.simpleproject.entity.BookEntity;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.List;
 
@@ -16,16 +17,10 @@ public class BookDto {
     private String name;
     private String date;
 
-    @Pattern(regexp = "[0-9]{3}+-+[0-9]{1}+-+[0-9]{5}+-+[0-9]{3}+-+[0-9]{1}$")
+    @Pattern(regexp = "[0-9]{3}+-+[0-9]-+[0-9]{5}+-+[0-9]{3}+-+[0-9]$")
+    @NotNull
     private String ISNBcode;
     private List<Author> authors;
-
-    public BookDto(String name, String date, String ISNBcode, List<Author> authors) {
-        this.name = name;
-        this.date = date;
-        this.ISNBcode = ISNBcode;
-        this.authors = authors;
-    }
 
     public static BookDto valueOf(BookEntity book){
         BookDto bookDto = new BookDto();
