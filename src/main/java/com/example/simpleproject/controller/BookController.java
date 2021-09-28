@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/book")
 @Api
@@ -21,8 +23,22 @@ public class BookController {
         return bookService.findBook(id);
     }
 
+    @GetMapping("/name/{name}")
+    public BookDto findBookByName(@PathVariable String name){
+        return bookService.findBookByName(name);
+    }
+
+    @GetMapping("/code/{code}")
+    public BookDto findBookByCode(@PathVariable String code){
+        return bookService.findBookByCode(code);
+    }
+    @GetMapping("/author/{author}")
+    public List<BookDto> findBookByAuthor(@PathVariable String author){
+        return bookService.findBookByAuthor(author);
+    }
+
     @PostMapping("/save")
-    public ResponseEntity<HttpStatus> saveBook(@RequestBody BookDto bookDto ){
+    public ResponseEntity<HttpStatus> saveBook(@RequestBody BookDto bookDto){
         return bookService.createBook(bookDto) ?
                 new ResponseEntity<>(HttpStatus.CREATED):
                 new ResponseEntity<>(HttpStatus.BAD_REQUEST);
