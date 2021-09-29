@@ -1,5 +1,6 @@
 package com.example.simpleproject.controller;
 
+import com.example.simpleproject.entity.BookEntity;
 import com.example.simpleproject.model.BookDto;
 import com.example.simpleproject.service.BookService;
 import io.swagger.annotations.Api;
@@ -21,6 +22,20 @@ public class BookController {
     @GetMapping("/{id}")
     public BookDto findBook(@PathVariable Long id){
         return bookService.findBook(id);
+    }
+
+    /**
+     * FindByFilter
+     * Поиск книг по фильтру.
+     */
+    @PostMapping("/match")
+    public List<BookDto> getMatchingBook(@RequestBody BookEntity bookEntity) {
+        return bookService.findMatchingBooks(bookEntity);
+    }
+
+    @RequestMapping(value = "/param", method = RequestMethod.POST, params = "sort")
+    public List<BookDto> getByParamBook(@RequestBody BookEntity bookEntity, @RequestParam("sort") String sort) {
+        return bookService.findMatchingBooksAndSort(bookEntity,sort);
     }
 
     @GetMapping("/name/{name}")

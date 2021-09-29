@@ -5,14 +5,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "books")
-public class BookEntity {
+public class BookEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
@@ -29,7 +29,6 @@ public class BookEntity {
     private List<Author> authors;
 
     public static BookEntity insertDtoData(BookDto bookDto){
-        BookEntity book = bookDto.mapToBookEntity();
-        return book;
+        return bookDto.mapToBookEntity();
     }
 }
