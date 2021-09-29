@@ -1,6 +1,8 @@
 package com.example.simpleproject.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import com.example.simpleproject.entity.Author;
 import com.example.simpleproject.model.BookDto;
@@ -12,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,11 +43,9 @@ public class BookService {
             bookDto = bookRepo.findById(id).map(BookDto::valueOf).orElseThrow();
         }catch (NoSuchElementException exception){
             exception.printStackTrace();
-            return bookDto;
         }
         return bookDto;
     }
-
 
     public boolean deleteBook(Long id) {
         if (bookRepo.findById(id).isPresent()){
@@ -82,7 +83,6 @@ public class BookService {
             bookDto = BookDto.valueOf(bookRepo.findByISNBcode(code));
         }catch (NullPointerException ex){
             ex.printStackTrace();
-            return bookDto;
         }
         return bookDto;
     }
@@ -93,5 +93,19 @@ public class BookService {
             bookDtos.add(BookDto.valueOf(bookEntity));
         }
         return bookDtos;
+    }
+
+    public List<BookDto> findMatchingBooks(BookEntity bookEntityFilter) {
+        return bookRepo.findAll(Example.of(bookEntityFilter)).stream().map(BookDto::valueOf).collect(Collectors.toList());
+    }
+
+    public List<BookDto> findMatchingBooksAndSort(BookEntity bookEntityFilter, String sort) {
+        List<BookDto> bookDtoList;
+        if(!sort.isEmpty()){
+            bookDtoList = bookRepo.findAll(Example.of(bookEntityFilter), Sort.by(sort)).stream().map(BookDto::valueOf).collect(Collectors.toList());
+        }else {
+            bookDtoList = bookRepo.findAll(Example.of(bookEntityFilter)).stream().map(BookDto::valueOf).collect(Collectors.toList());
+        }
+        return bookDtoList;
     }
 }
